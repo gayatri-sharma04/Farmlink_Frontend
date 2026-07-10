@@ -5,16 +5,7 @@ import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-
-// Placeholder pages for protected routes
-const ProductsPage = () => (
-  <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">Products Page</h1>
-      <p className="text-gray-600">Coming soon...</p>
-    </div>
-  </div>
-);
+import ProductsPage from './pages/ProductsPage';
 
 const CartPage = () => (
   <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
