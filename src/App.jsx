@@ -6,33 +6,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProductsPage from './pages/ProductsPage';
-
-const CartPage = () => (
-  <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">Shopping Cart</h1>
-      <p className="text-gray-600">Coming soon...</p>
-    </div>
-  </div>
-);
-
-const CheckoutPage = () => (
-  <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">Checkout</h1>
-      <p className="text-gray-600">Coming soon...</p>
-    </div>
-  </div>
-);
-
-const OrdersPage = () => (
-  <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">My Orders</h1>
-      <p className="text-gray-600">Coming soon...</p>
-    </div>
-  </div>
-);
+import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
+import OrdersPage from './pages/OrdersPage';
 
 function App() {
   return (
