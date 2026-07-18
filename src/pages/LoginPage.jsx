@@ -26,7 +26,13 @@ const LoginPage = () => {
     const result = await login(email, password);
     
     if (result.success) {
-      navigate('/products');
+      // Role-based redirect
+      const userRole = result.data.user?.role;
+      if (userRole === 'farmer') {
+        navigate('/dashboard');
+      } else {
+        navigate('/products');
+      }
     } else {
       setError(result.error);
     }

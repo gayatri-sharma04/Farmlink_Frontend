@@ -24,29 +24,51 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {isLoggedIn && user ? (
               <>
-                {/* Products Link */}
-                <Link
-                  to="/products"
-                  className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Products
-                </Link>
-
-                {/* Cart Link */}
-                <Link
-                  to="/cart"
-                  className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Cart
-                </Link>
-
-                {/* Orders Link */}
-                <Link
-                  to="/orders"
-                  className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Orders
-                </Link>
+                {user.role === 'farmer' ? (
+                  <>
+                    {/* Farmer Links */}
+                    <Link
+                      to="/dashboard"
+                      className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                      to="/farmer-products"
+                      className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    >
+                      My Products
+                    </Link>
+                    <Link
+                      to="/farmer-orders"
+                      className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    >
+                      Orders
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    {/* Consumer Links */}
+                    <Link
+                      to="/products"
+                      className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    >
+                      Products
+                    </Link>
+                    <Link
+                      to="/cart"
+                      className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    >
+                      Cart
+                    </Link>
+                    <Link
+                      to="/orders"
+                      className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    >
+                      Orders
+                    </Link>
+                  </>
+                )}
 
                 {/* User Info */}
                 <div className="flex items-center space-x-3 border-l border-gray-300 pl-4">

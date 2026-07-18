@@ -1,43 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getUserOrders } from '../services/orderService';
+import { getFarmerOrders, updateOrderStatus, getMyProducts } from '../services/farmerService';
 import { formatDateInUserTimezone } from '../utils/dateFormatter';
 
-const OrdersPage = () => {
+const FarmerOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [statusUpdate, setStatusUpdate] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   
-  const { token } = useAuth();
+  const { user, token } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
-      if (!token) return;
+      if (!token || !user) return;
       
       setLoading(true);
       setError('');
       
       try {
-        const data = await getUserOrders(token);
-        console.log('Orders data from backend:', data);
-        // Sort by newest first (reverse chronological)
-        const sortedOrders = Array.isArray(data) ? data.sort((a, b) => 
-          new Date(b.created_at) - new Date(a.created_at)
-        ) : [];
-        setOrders(sortedOrders);
+        // Get farmer's products to get their product IDs
+        const myProducts = await getMyProducts(token, user.id);
+        
+        // Convert product IDs to strings for consistent comparison
+        const myProductIds = new Set(myProducts.map(p => String(p.id)));
+        
+        // Get all orders (backend filters for farmers)
+        const data = await getFarmerOrders(token);
+        
+        // Filter orders AND filter items within each order
+        const filteredOrders = (Array.isArray(data) ? data : [])
+          .filter(order => {
+            if (!order.items || !Array.isArray(order.items)) return false;
+            // Include order if it has at least one of farmer's products
+            return order.items.some(item => 
+              myProductIds.has(String(item.product_id))
+            );
+          })
+          .map(order => {
+            // Filter items within the order to show only farmer's products
+            const farmerItems = order.items.filter(item => 
+              myProductIds.has(String(item.product_id))
+            );
+            
+            // Recalculate total for farmer's items only
+            const farmerTotal = farmerItems.reduce((total, item) => 
+              total + (item.quantity * item.price), 0
+            );
+            
+            return {
+              ...order,
+              items: farmerItems,
+              total_price: farmerTotal
+            };
+          });
+        
+        setOrders(filteredOrders);
       } catch (err) {
-        const errorMessage = err.detail || err.message || 'Failed to fetch orders';
-        setError(errorMessage);
+        setError(err.message || 'Failed to fetch orders');
       } finally {
         setLoading(false);
       }
     };
 
     fetchOrders();
-  }, [token]);
+  }, [token, user]);
+
+  const formatPrice = (price) => {
+    return `Rs. ${parseFloat(price).toFixed(2)}`;
+  };
 
   const getStatusColor = (status) => {
     const colors = {
@@ -50,27 +85,25 @@ const OrdersPage = () => {
     return colors[status] || 'bg-gray-100 text-gray-800';
   };
 
-  const formatDate = (dateString) => {
-    return formatDateInUserTimezone(dateString);
-  };
-
-  const formatPrice = (price) => {
-    return `Rs. ${parseFloat(price).toFixed(2)}`;
-  };
-
-  const getItemCount = (items) => {
-    if (!items || !Array.isArray(items)) return 0;
-    return items.length;
-  };
-
   const handleViewDetails = (order) => {
-    console.log('Selected order details:', order);
     setSelectedOrder(order);
+    setStatusUpdate(order.status);
   };
 
-  const closeDetails = () => {
-    setSelectedOrder(null);
+  const handleStatusUpdate = async () => {
+    if (!selectedOrder || !statusUpdate) return;
+
+    try {
+      await updateOrderStatus(selectedOrder.id, { status: statusUpdate }, token);
+      setOrders(orders.map(o => o.id === selectedOrder.id ? { ...o, status: statusUpdate } : o));
+      setSelectedOrder(null);
+      setSuccessMessage('Order status updated successfully');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (err) {
+      setError(err.message || 'Failed to update order status');
+    }
   };
+
 
   if (loading) {
     return (
@@ -91,8 +124,8 @@ const OrdersPage = () => {
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Orders</h1>
-          <p className="text-gray-600">View your order history and track deliveries</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Orders</h1>
+          <p className="text-gray-600">View and manage orders for your products</p>
         </div>
       </div>
 
@@ -103,8 +136,13 @@ const OrdersPage = () => {
           </div>
         )}
 
+        {successMessage && (
+          <div className="mb-6 bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg">
+            {successMessage}
+          </div>
+        )}
+
         {!orders || orders.length === 0 ? (
-          // Empty State
           <div className="bg-white rounded-lg shadow-md p-8 text-center">
             <svg
               className="h-16 w-16 text-gray-400 mx-auto mb-4"
@@ -120,16 +158,9 @@ const OrdersPage = () => {
               />
             </svg>
             <h3 className="text-xl font-semibold text-gray-700 mb-2">No orders yet</h3>
-            <p className="text-gray-500 mb-6">You haven't placed any orders yet</p>
-            <button
-              onClick={() => navigate('/products')}
-              className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
-            >
-              Browse Products
-            </button>
+            <p className="text-gray-500">Orders will appear here when customers purchase your products</p>
           </div>
         ) : (
-          // Orders List
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             {/* Desktop Table */}
             <div className="hidden lg:block">
@@ -138,27 +169,31 @@ const OrdersPage = () => {
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Order ID</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Date</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Total</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Items</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Action</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Total</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {orders.map((order, index) => (
-                    <tr key={order.id} className={index % 2 === 0 ? 'bg-white hover:bg-gray-50' : 'bg-gray-50 hover:bg-gray-100'}>
+                  {orders.map((order) => (
+                    <tr key={order.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <span className="font-mono text-sm text-gray-900">#{order.id.slice(0, 8)}</span>
                       </td>
-                      <td className="px-6 py-4 text-gray-700">{formatDate(order.created_at)}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">
+                        {formatDateInUserTimezone(order.created_at)}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-700">
+                        {order.items?.length || 0} items
+                      </td>
+                      <td className="px-6 py-4 font-semibold text-gray-900">
+                        {formatPrice(order.total_price)}
+                      </td>
                       <td className="px-6 py-4">
                         <span className={`px-3 py-1 text-xs font-semibold rounded-full uppercase ${getStatusColor(order.status)}`}>
                           {order.status}
                         </span>
-                      </td>
-                      <td className="px-6 py-4 font-semibold text-gray-900">{formatPrice(order.total_price)}</td>
-                      <td className="px-6 py-4 text-gray-700">
-                        {getItemCount(order.items)} {getItemCount(order.items) === 1 ? 'item' : 'items'}
                       </td>
                       <td className="px-6 py-4">
                         <button
@@ -181,7 +216,7 @@ const OrdersPage = () => {
                   <div className="flex justify-between items-start mb-3">
                     <div>
                       <p className="font-mono text-sm text-gray-900">#{order.id.slice(0, 8)}</p>
-                      <p className="text-sm text-gray-600">{formatDate(order.created_at)}</p>
+                      <p className="text-sm text-gray-600">{formatDateInUserTimezone(order.created_at)}</p>
                     </div>
                     <span className={`px-3 py-1 text-xs font-semibold rounded-full uppercase ${getStatusColor(order.status)}`}>
                       {order.status}
@@ -191,7 +226,7 @@ const OrdersPage = () => {
                   <div className="flex justify-between items-center mb-3">
                     <div>
                       <p className="text-sm text-gray-600">
-                        {getItemCount(order.items)} {getItemCount(order.items) === 1 ? 'item' : 'items'}
+                        {order.items?.length || 0} items
                       </p>
                     </div>
                     <p className="font-bold text-lg text-green-600">{formatPrice(order.total_price)}</p>
@@ -221,7 +256,7 @@ const OrdersPage = () => {
                   <p className="text-sm text-gray-600">Order #{selectedOrder.id.slice(0, 8)}</p>
                 </div>
                 <button
-                  onClick={closeDetails}
+                  onClick={() => setSelectedOrder(null)}
                   className="text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,10 +276,10 @@ const OrdersPage = () => {
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div>
                   <p className="text-sm text-gray-600">Order Date</p>
-                  <p className="font-medium text-gray-900">{formatDate(selectedOrder.created_at)}</p>
+                  <p className="font-medium text-gray-900">{formatDateInUserTimezone(selectedOrder.created_at)}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Total</p>
+                  <p className="text-sm text-gray-600">Your Total</p>
                   <p className="font-bold text-lg text-green-600">{formatPrice(selectedOrder.total_price)}</p>
                 </div>
               </div>
@@ -300,13 +335,37 @@ const OrdersPage = () => {
                 </div>
               )}
 
-              {/* Close Button */}
-              <button
-                onClick={closeDetails}
-                className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
-              >
-                Close
-              </button>
+              {/* Update Status */}
+              <div className="mb-6">
+                <h4 className="font-semibold text-gray-900 mb-2">Update Status</h4>
+                <select
+                  value={statusUpdate}
+                  onChange={(e) => setStatusUpdate(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="shipped">Shipped</option>
+                  <option value="delivered">Delivered</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => setSelectedOrder(null)}
+                  className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={handleStatusUpdate}
+                  className="flex-1 bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                >
+                  Update Status
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -315,4 +374,4 @@ const OrdersPage = () => {
   );
 };
 
-export default OrdersPage;
+export default FarmerOrders;

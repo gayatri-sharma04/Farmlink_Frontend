@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { addToCart } from '../services/productService';
 import { useAuth } from '../context/AuthContext';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, farmerName }) => {
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -142,7 +142,9 @@ const ProductCard = ({ product }) => {
 
         {/* Farmer Info */}
         <div className="mb-4">
-          <span className="text-xs text-gray-500">Sold by Local Farm</span>
+          <span className="text-xs text-gray-500">
+            Sold by {farmerName || 'Local Farm'}
+          </span>
         </div>
 
         {/* Quantity Selector */}
