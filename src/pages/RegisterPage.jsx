@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Logo from '../components/Logo';
+import farmerIcon from '../assets/farmer.png';
+import userIcon from '../assets/user.png';
+import backgroundImage from '../assets/background image.png';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -91,7 +94,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 flex items-center justify-center p-4 py-8">
+    <div className="min-h-screen flex items-center justify-center p-4 py-8" style={{ backgroundImage: `url('${backgroundImage}')`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
       <div className="w-full max-w-md">
         {/* QUOTE SECTION */}
         <div className="mb-8 text-center">
@@ -126,6 +129,46 @@ const RegisterPage = () => {
 )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* ROLE SELECTION - CARD BASED - MOVED TO TOP */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                I want to *
+              </label>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, role: 'consumer' })}
+                  className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center justify-center ${
+                    formData.role === 'consumer'
+                      ? 'border-green-600 bg-green-50'
+                      : 'border-gray-300 bg-gray-50 hover:border-green-300'
+                  }`}
+                >
+                  <div className="flex justify-center mb-2">
+                    <img src={userIcon} alt="Consumer" className="w-12 h-12 object-contain" />
+                  </div>
+                  <div className="font-semibold text-gray-900 text-sm">Consumer</div>
+                  <div className="text-xs text-gray-600">Buy Products</div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, role: 'farmer' })}
+                  className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center justify-center ${
+                    formData.role === 'farmer'
+                      ? 'border-green-600 bg-green-50'
+                      : 'border-gray-300 bg-gray-50 hover:border-green-300'
+                  }`}
+                >
+                  <div className="flex justify-center mb-2">
+                    <img src={farmerIcon} alt="Farmer" className="w-12 h-12 object-contain" />
+                  </div>
+                  <div className="font-semibold text-gray-900 text-sm">Farmer</div>
+                  <div className="text-xs text-gray-600">Sell Products</div>
+                </button>
+              </div>
+            </div>
+
             {/* Full Name */}
             <div>
               <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -207,42 +250,6 @@ const RegisterPage = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
                 placeholder="Enter your address"
               />
-            </div>
-
-            {/* ROLE SELECTION - CARD BASED */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                I want to *
-              </label>
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  type="button"
-                  onClick={() => setFormData({ ...formData, role: 'consumer' })}
-                  className={`p-4 rounded-lg border-2 transition-all ${
-                    formData.role === 'consumer'
-                      ? 'border-green-600 bg-green-50'
-                      : 'border-gray-300 bg-gray-50 hover:border-green-300'
-                  }`}
-                >
-                  <div className="text-3xl mb-2">👤</div>
-                  <div className="font-semibold text-gray-900 text-sm">Consumer</div>
-                  <div className="text-xs text-gray-600">Buy Products</div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setFormData({ ...formData, role: 'farmer' })}
-                  className={`p-4 rounded-lg border-2 transition-all ${
-                    formData.role === 'farmer'
-                      ? 'border-green-600 bg-green-50'
-                      : 'border-gray-300 bg-gray-50 hover:border-green-300'
-                  }`}
-                >
-                  <div className="text-3xl mb-2">👨‍🌾</div>
-                  <div className="font-semibold text-gray-900 text-sm">Farmer</div>
-                  <div className="text-xs text-gray-600">Sell Products</div>
-                </button>
-              </div>
             </div>
             {/* REGISTER BUTTON */}
             <button

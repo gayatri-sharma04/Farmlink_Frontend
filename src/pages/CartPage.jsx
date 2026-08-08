@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Logo from '../components/Logo';
 import { getCart, removeFromCart, updateCartItem, clearCart } from '../services/productService';
 
 const CartPage = () => {
@@ -115,12 +116,17 @@ const CartPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#F0FFF0' }}>
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Shopping Cart</h1>
-          <p className="text-gray-600">Review your items before checkout</p>
+          <div className="flex items-center gap-4">
+            <Logo size="lg" />
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Shopping Cart</h1>
+              <p className="text-gray-600">Review your items before checkout</p>
+            </div>
+          </div>
         </div>
       </div>
 
