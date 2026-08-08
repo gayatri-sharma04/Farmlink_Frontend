@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Logo from '../components/Logo';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -10,6 +11,16 @@ const LoginPage = () => {
   
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const quotes = [
+    "Connecting farmers with consumers, one harvest at a time.",
+    "Fair prices for farmers, fresh produce for consumers.",
+    "Direct from farm to your table - no middlemen.",
+    "Supporting local farmers, building a stronger community.",
+    "Real farmers, real prices, real value.",
+  ];
+
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,90 +57,103 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full">
-        {/* Logo/Title */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-green-600 mb-2">FarmLink</h1>
-          <p className="text-gray-600">Farmer to Consumer Marketplace</p>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        
+        {/* QUOTE SECTION */}
+        <div className="mb-8 text-center">
+          <div className="flex justify-center mb-6">
+            <Logo size="lg" />
+          </div>
+          <h1 className="text-4xl font-bold text-green-600 mb-2">
+            FarmLink
+          </h1>
+          <p className="text-gray-600 text-lg mb-4">
+            Farmer to Consumer Marketplace
+          </p>
+          <p className="text-gray-700 text-sm italic px-4 py-4 bg-green-100 rounded-lg border-l-4 border-green-600">
+            "{randomQuote}"
+          </p>
         </div>
 
-        {/* Login Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+        {/* LOGIN FORM */}
+        <div className="bg-white rounded-xl shadow-xl p-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">
             Welcome Back
           </h2>
+          <p className="text-gray-600 text-sm mb-6">
+            Sign in to your account to continue
+          </p>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-4">
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email Input */}
+            {/* EMAIL FIELD */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Email Address
               </label>
               <input
                 type="email"
-                id="email"
                 value={email}
                 onChange={handleInputChange(setEmail)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                placeholder="Enter your email"
+                placeholder="you@example.com"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 required
               />
             </div>
 
-            {/* Password Input */}
+            {/* PASSWORD FIELD */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Password
               </label>
               <input
                 type="password"
-                id="password"
                 value={password}
                 onChange={handleInputChange(setPassword)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                placeholder="Enter your password"
+                placeholder="••••••••"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 required
               />
             </div>
 
-            {/* Login Button */}
+            {/* LOGIN BUTTON */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition-all disabled:opacity-50"
             >
-              {loading ? (
-                <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-              ) : (
-                'Login'
-              )}
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
-          {/* Register Link */}
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
-              Don't have an account?{' '}
-              <Link to="/register" className="text-blue-600 hover:text-blue-700 font-semibold">
-                Register here
-              </Link>
-            </p>
+          {/* DIVIDER */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">New to FarmLink?</span>
+            </div>
           </div>
+
+          {/* REGISTER LINK */}
+          <button
+            onClick={() => navigate('/register')}
+            className="w-full border-2 border-green-600 text-green-600 font-bold py-3 rounded-lg hover:bg-green-50 transition-colors"
+          >
+            Create an Account
+          </button>
         </div>
 
-        {/* Footer */}
-        <p className="text-center text-gray-500 text-sm mt-6">
-          © 2024 FarmLink. All rights reserved.
+        {/* FOOTER */}
+        <p className="text-center text-gray-600 text-xs mt-6">
+          © 2026 FarmLink. All rights reserved.
         </p>
       </div>
     </div>

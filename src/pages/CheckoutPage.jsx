@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getCart, clearCart } from '../services/productService';
 import { placeOrder } from '../services/orderService';
+import { CreditCard, Banknote, Wallet } from 'lucide-react';
 
 const CheckoutPage = () => {
   const [cart, setCart] = useState(null);
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [notes, setNotes] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('cod');
   const [loading, setLoading] = useState(true);
   const [placingOrder, setPlacingOrder] = useState(false);
   const [error, setError] = useState('');
@@ -54,6 +56,11 @@ const CheckoutPage = () => {
       return false;
     }
     
+    if (!paymentMethod) {
+      setValidationError('Please select a payment method');
+      return false;
+    }
+    
     setValidationError('');
     return true;
   };
@@ -79,6 +86,7 @@ const CheckoutPage = () => {
       total_price: cart.total_price,
       delivery_address: deliveryAddress.trim(),
       notes: notes.trim() || undefined,
+      payment_method: paymentMethod,
     };
 
     try {
@@ -282,6 +290,66 @@ const CheckoutPage = () => {
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all resize-none"
                           placeholder="Any special instructions or notes for delivery?"
                         />
+                      </div>
+
+                      {/* Payment Method Selection */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-3">
+                          Select Payment Method *
+                        </label>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          {/* COD Option */}
+                          <button
+                            type="button"
+                            onClick={() => setPaymentMethod('cod')}
+                            className={`p-4 rounded-lg border-2 transition-all ${
+                              paymentMethod === 'cod'
+                                ? 'border-green-600 bg-green-50'
+                                : 'border-gray-300 bg-gray-50 hover:border-green-300'
+                            }`}
+                          >
+                            <Banknote size={28} className="text-green-600 mx-auto mb-2" />
+                            <div className="font-bold text-gray-900 text-sm mb-1">Cash on Delivery</div>
+                            <div className="text-xs text-gray-600">Pay when you receive</div>
+                          </button>
+
+                          {/* Card Option */}
+                          <button
+                            type="button"
+                            onClick={() => setPaymentMethod('card')}
+                            className={`p-4 rounded-lg border-2 transition-all ${
+                              paymentMethod === 'card'
+                                ? 'border-green-600 bg-green-50'
+                                : 'border-gray-300 bg-gray-50 hover:border-green-300'
+                            }`}
+                          >
+                            <CreditCard size={28} className="text-green-600 mx-auto mb-2" />
+                            <div className="font-bold text-gray-900 text-sm mb-1">Debit/Credit Card</div>
+                            <div className="text-xs text-gray-600">Secure payment</div>
+                          </button>
+
+                          {/* E-Wallet Option */}
+                          <button
+                            type="button"
+                            onClick={() => setPaymentMethod('ewallet')}
+                            className={`p-4 rounded-lg border-2 transition-all ${
+                              paymentMethod === 'ewallet'
+                                ? 'border-green-600 bg-green-50'
+                                : 'border-gray-300 bg-gray-50 hover:border-green-300'
+                            }`}
+                          >
+                            <Wallet size={28} className="text-green-600 mx-auto mb-2" />
+                            <div className="font-bold text-gray-900 text-sm mb-1">E-Wallet</div>
+                            <div className="text-xs text-gray-600">Khalti, PayPal, etc</div>
+                          </button>
+                        </div>
+
+                        {/* Payment Note */}
+                        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                          <p className="text-xs text-blue-800">
+                            <span className="font-semibold">ℹ️ Note:</span> Card and E-wallet payments will be available soon. For now, you can use Cash on Delivery.
+                          </p>
+                        </div>
                       </div>
                     </div>
 

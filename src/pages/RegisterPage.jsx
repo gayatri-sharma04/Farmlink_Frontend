@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Logo from '../components/Logo';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,16 @@ const RegisterPage = () => {
   
   const { register } = useAuth();
   const navigate = useNavigate();
+
+  const quotes = [
+    "Join our community of farmers and consumers.",
+    "Start selling your fresh produce directly to customers.",
+    "Get fresh, organic products from local farmers.",
+    "Build a sustainable food ecosystem together.",
+    "Fair trade, fresh food, happy community.",
+  ];
+
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
   const handleChange = (e) => {
     setFormData({
@@ -80,19 +91,32 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center px-4 py-8">
-      <div className="max-w-md w-full">
-        {/* Logo/Title */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-green-600 mb-2">FarmLink</h1>
-          <p className="text-gray-600">Farmer to Consumer Marketplace</p>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 flex items-center justify-center p-4 py-8">
+      <div className="w-full max-w-md">
+        {/* QUOTE SECTION */}
+        <div className="mb-8 text-center">
+          <div className="flex justify-center mb-6">
+            <Logo size="lg" />
+          </div>
+          <h1 className="text-4xl font-bold text-green-600 mb-2">
+            FarmLink
+          </h1>
+          <p className="text-gray-600 text-lg mb-4">
+            Farmer to Consumer Marketplace
+          </p>
+          <p className="text-gray-700 text-sm italic px-4 py-4 bg-green-100 rounded-lg border-l-4 border-green-600">
+            "{randomQuote}"
+          </p>
         </div>
 
-        {/* Register Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+        {/* REGISTER FORM */}
+        <div className="bg-white rounded-xl shadow-xl p-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">
             Create Account
           </h2>
+          <p className="text-gray-600 text-sm mb-6">
+            Join our community today
+          </p>
 {error && (
   <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
     {typeof error === 'string' 
@@ -185,54 +209,73 @@ const RegisterPage = () => {
               />
             </div>
 
-            {/* Role */}
+            {/* ROLE SELECTION - CARD BASED */}
             <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 I want to *
               </label>
-              <select
-                id="role"
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-white"
-                required
-              >
-                <option value="consumer">Buy Products (Consumer)</option>
-                <option value="farmer">Sell Products (Farmer)</option>
-              </select>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, role: 'consumer' })}
+                  className={`p-4 rounded-lg border-2 transition-all ${
+                    formData.role === 'consumer'
+                      ? 'border-green-600 bg-green-50'
+                      : 'border-gray-300 bg-gray-50 hover:border-green-300'
+                  }`}
+                >
+                  <div className="text-3xl mb-2">👤</div>
+                  <div className="font-semibold text-gray-900 text-sm">Consumer</div>
+                  <div className="text-xs text-gray-600">Buy Products</div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, role: 'farmer' })}
+                  className={`p-4 rounded-lg border-2 transition-all ${
+                    formData.role === 'farmer'
+                      ? 'border-green-600 bg-green-50'
+                      : 'border-gray-300 bg-gray-50 hover:border-green-300'
+                  }`}
+                >
+                  <div className="text-3xl mb-2">👨‍🌾</div>
+                  <div className="font-semibold text-gray-900 text-sm">Farmer</div>
+                  <div className="text-xs text-gray-600">Sell Products</div>
+                </button>
+              </div>
             </div>
-            {/* Register Button */}
+            {/* REGISTER BUTTON */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition-all disabled:opacity-50"
             >
-              {loading ? (
-                <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-              ) : (
-                'Create Account'
-              )}
+              {loading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 
-          {/* Login Link */}
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
-              Already have an account?{' '}
-              <Link to="/login" className="text-green-600 hover:text-green-700 font-semibold">
-                Login here
-              </Link>
-            </p>
+          {/* DIVIDER */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">Already have an account?</span>
+            </div>
           </div>
+
+          {/* LOGIN LINK */}
+          <button
+            onClick={() => navigate('/login')}
+            className="w-full border-2 border-green-600 text-green-600 font-bold py-3 rounded-lg hover:bg-green-50 transition-colors"
+          >
+            Sign In
+          </button>
         </div>
 
-        {/* Footer */}
-        <p className="text-center text-gray-500 text-sm mt-6">
-          © 2024 FarmLink. All rights reserved.
+        {/* FOOTER */}
+        <p className="text-center text-gray-600 text-xs mt-6">
+          © 2026 FarmLink. All rights reserved.
         </p>
       </div>
     </div>
