@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import Logo from '../components/Logo';
 import farmerIcon from '../assets/farmer.png';
 import userIcon from '../assets/user.png';
@@ -17,8 +18,9 @@ const RegisterPage = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { register } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const quotes = [
@@ -115,15 +117,15 @@ const RegisterPage = () => {
         {/* REGISTER FORM */}
         <div className="bg-white rounded-xl shadow-xl p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-1">
-            Create Account
+            {t('register.title')}
           </h2>
           <p className="text-gray-600 text-sm mb-6">
-            Join our community today
+            {t('register.subtitle')}
           </p>
 {error && (
   <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-    {typeof error === 'string' 
-      ? error 
+    {typeof error === 'string'
+      ? error
       : error?.response?.data?.detail || error?.message || 'Registration failed'}
   </div>
 )}
@@ -172,7 +174,7 @@ const RegisterPage = () => {
             {/* Full Name */}
             <div>
               <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name *
+                {t('register.fullName')} *
               </label>
               <input
                 type="text"
@@ -189,7 +191,7 @@ const RegisterPage = () => {
             {/* Email */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address *
+                {t('register.email')} *
               </label>
               <input
                 type="email"
@@ -206,7 +208,7 @@ const RegisterPage = () => {
             {/* Password */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                Password *
+                {t('register.password')} *
               </label>
               <input
                 type="password"
@@ -223,7 +225,7 @@ const RegisterPage = () => {
             {/* Phone */}
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number
+                {t('register.phone')}
               </label>
               <input
                 type="tel"
@@ -239,7 +241,7 @@ const RegisterPage = () => {
             {/* Address */}
             <div>
               <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                Address
+                {t('register.address')}
               </label>
               <textarea
                 id="address"
@@ -257,7 +259,7 @@ const RegisterPage = () => {
               disabled={loading}
               className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition-all disabled:opacity-50"
             >
-              {loading ? 'Creating Account...' : 'Create Account'}
+              {loading ? t('register.creatingAccount') : t('register.createBtn')}
             </button>
           </form>
 
@@ -267,7 +269,7 @@ const RegisterPage = () => {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Already have an account?</span>
+              <span className="px-2 bg-white text-gray-500">{t('register.haveAccount')}</span>
             </div>
           </div>
 
@@ -276,7 +278,7 @@ const RegisterPage = () => {
             onClick={() => navigate('/login')}
             className="w-full border-2 border-green-600 text-green-600 font-bold py-3 rounded-lg hover:bg-green-50 transition-colors"
           >
-            Sign In
+            {t('register.signIn')}
           </button>
         </div>
 

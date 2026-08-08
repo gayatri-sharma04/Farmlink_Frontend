@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import Logo from '../components/Logo';
 import backgroundImage from '../assets/background image.png';
 
@@ -9,8 +10,9 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { login } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const quotes = [
@@ -77,13 +79,16 @@ const LoginPage = () => {
           </p>
         </div>
 
+
+
+
         {/* LOGIN FORM */}
         <div className="bg-white rounded-xl shadow-xl p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-1">
-            Welcome Back
+            {t('login.title')}
           </h2>
           <p className="text-gray-600 text-sm mb-6">
-            Sign in to your account to continue
+            {t('login.subtitle')}
           </p>
 
           {error && (
@@ -96,7 +101,7 @@ const LoginPage = () => {
             {/* EMAIL FIELD */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Email Address
+                {t('login.email')}
               </label>
               <input
                 type="email"
@@ -111,7 +116,7 @@ const LoginPage = () => {
             {/* PASSWORD FIELD */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Password
+                {t('login.password')}
               </label>
               <input
                 type="password"
@@ -129,7 +134,7 @@ const LoginPage = () => {
               disabled={loading}
               className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition-all disabled:opacity-50"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? t('login.signingIn') : t('login.signIn')}
             </button>
           </form>
 
@@ -139,7 +144,7 @@ const LoginPage = () => {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">New to FarmLink?</span>
+              <span className="px-2 bg-white text-gray-500">{t('login.noAccount')}</span>
             </div>
           </div>
 
@@ -148,14 +153,14 @@ const LoginPage = () => {
             onClick={() => navigate('/register')}
             className="w-full border-2 border-green-600 text-green-600 font-bold py-3 rounded-lg hover:bg-green-50 transition-colors"
           >
-            Create an Account
+            {t('login.createAccount')}
           </button>
         </div>
 
         {/* FOOTER */}
-        <p className="text-center text-gray-600 text-xs mt-6">
+        {/* <p className="text-center text-blue-600 text-xs mt-6">
           © 2026 FarmLink. All rights reserved.
-        </p>
+        </p> */}
       </div>
     </div>
   );

@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { ShoppingBag, ShoppingCart, Package, Home, PlusCircle } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { ShoppingBag, ShoppingCart, Package, Home, PlusCircle, ChevronDown } from 'lucide-react';
 import Logo from './Logo';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { language, changeLanguage, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const handleLanguageChange = (lang) => {
+    changeLanguage(lang);
+    setLanguageDropdownOpen(false);
   };
 
   return (
@@ -116,17 +124,85 @@ const Navbar = () => {
                   onClick={handleLogout}
                   className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold"
                 >
-                  Logout
+                  {t('nav.logout')}
                 </button>
               </div>
             ) : (
-              <button
-                onClick={() => navigate('/login')}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold"
-              >
-                Login
-              </button>
+              <>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="px-4 py-2 text-green-600 border-2 border-green-600 rounded-lg hover:bg-green-50 transition-all font-semibold hover:shadow-md"
+                >
+                  {t('nav.login')}
+                </button>
+
+                <button
+                  onClick={() => navigate('/register')}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-semibold hover:shadow-md"
+                >
+                  {t('nav.signup')}
+                </button>
+              </>
             )}
+
+            {/* LANGUAGE SELECTOR DROPDOWN */}
+            <div className="relative">
+              <button
+                onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all border border-gray-300 font-semibold text-gray-700"
+              >
+                <span className="text-lg">
+                  {language === 'en' ? '🇬🇧' : '🇳🇵'}
+                </span>
+                <span className="text-sm">
+                  {language === 'en' ? 'English' : 'नेपाली'}
+                </span>
+                <ChevronDown
+                  size={16}
+                  className={`transition-transform ${languageDropdownOpen ? 'rotate-180' : ''}`}
+                />
+              </button>
+
+              {/* DROPDOWN MENU */}
+              {languageDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border-2 border-gray-300 rounded-lg shadow-xl z-50">
+
+                  {/* ENGLISH OPTION */}
+                  <button
+                    onClick={() => handleLanguageChange('en')}
+                    className={`w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-green-50 transition-colors border-b border-gray-200 ${
+                      language === 'en' ? 'bg-green-100 border-l-4 border-green-600' : ''
+                    }`}
+                  >
+                    <span className="text-2xl">🇬🇧</span>
+                    <div>
+                      <div className="font-semibold text-gray-900">English</div>
+                      <div className="text-xs text-gray-600">English Language</div>
+                    </div>
+                    {language === 'en' && (
+                      <span className="ml-auto text-green-600 font-bold">✓</span>
+                    )}
+                  </button>
+
+                  {/* NEPALI OPTION */}
+                  <button
+                    onClick={() => handleLanguageChange('np')}
+                    className={`w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-green-50 transition-colors ${
+                      language === 'np' ? 'bg-green-100 border-l-4 border-green-600' : ''
+                    }`}
+                  >
+                    <span className="text-2xl">🇳🇵</span>
+                    <div>
+                      <div className="font-semibold text-gray-900">नेपाली</div>
+                      <div className="text-xs text-gray-600">Nepali Language</div>
+                    </div>
+                    {language === 'np' && (
+                      <span className="ml-auto text-green-600 font-bold">✓</span>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
