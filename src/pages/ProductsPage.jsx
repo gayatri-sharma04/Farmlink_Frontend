@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ProductCard from '../components/ProductCard';
-import Logo from '../components/Logo';
 import { getProducts } from '../services/productService';
 
 const ProductsPage = () => {
@@ -69,16 +68,13 @@ const ProductsPage = () => {
       {/* PAGE HEADER */}
       <div className="bg-gradient-to-r from-green-50 to-blue-50 border-b-2 border-green-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex items-center gap-4 mb-4">
-            <Logo size="lg" />
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900">
-                Fresh Products
-              </h1>
-              <p className="text-gray-600 text-lg">
-                Browse our selection of fresh produce from local farmers
-              </p>
-            </div>
+          <div className="mb-4">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              Fresh Products
+            </h1>
+            <p className="text-gray-600 text-lg">
+              Browse our selection of fresh produce from local farmers
+            </p>
           </div>
         </div>
       </div>
