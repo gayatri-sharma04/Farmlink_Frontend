@@ -60,44 +60,25 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundImage: `url('${backgroundImage}')`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundImage: `url('${backgroundImage}')`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'scroll' }}>
+      <div className="w-full max-w-[500px] mx-auto">
         
-        {/* QUOTE SECTION */}
-        <div className="mb-8 text-center">
-          <div className="flex justify-center mb-6">
-            <Logo size="lg" />
-          </div>
-          <h1 className="text-4xl font-bold text-green-600 mb-2">
-            FarmLink
-          </h1>
-          <p className="text-gray-600 text-lg mb-4">
-            Farmer to Consumer Marketplace
-          </p>
-          <p className="text-gray-700 text-sm italic px-4 py-4 bg-green-100 rounded-lg border-l-4 border-green-600">
-            "{randomQuote}"
-          </p>
-        </div>
-
-
-
-
         {/* LOGIN FORM */}
-        <div className="bg-white rounded-xl shadow-xl p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">
+        <div className="bg-white/98 backdrop-blur-sm rounded-3xl shadow-2xl p-9 border border-gray-100">
+          <h2 className="text-2xl font-bold mb-2 ml-4" style={{ color: '#14532d' }}>
             {t('login.title')}
           </h2>
-          <p className="text-gray-600 text-sm mb-6">
+          <p className="text-gray-600 text-sm mb-8">
             {t('login.subtitle')}
           </p>
 
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* EMAIL FIELD */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -108,7 +89,7 @@ const LoginPage = () => {
                 value={email}
                 onChange={handleInputChange(setEmail)}
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-5 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-base"
                 required
               />
             </div>
@@ -123,7 +104,7 @@ const LoginPage = () => {
                 value={password}
                 onChange={handleInputChange(setPassword)}
                 placeholder="••••••••"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-5 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-base"
                 required
               />
             </div>
@@ -132,26 +113,26 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition-all disabled:opacity-50"
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-4 rounded-xl hover:from-green-600 hover:to-green-700 transition-all disabled:opacity-50 shadow-lg hover:shadow-xl text-base"
             >
               {loading ? t('login.signingIn') : t('login.signIn')}
             </button>
           </form>
 
           {/* DIVIDER */}
-          <div className="relative my-6">
+          <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
+              <div className="w-full border-t border-gray-200"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">{t('login.noAccount')}</span>
+              <span className="px-3 bg-white text-gray-500">{t('login.noAccount')}</span>
             </div>
           </div>
 
           {/* REGISTER LINK */}
           <button
             onClick={() => navigate('/register')}
-            className="w-full border-2 border-green-600 text-green-600 font-bold py-3 rounded-lg hover:bg-green-50 transition-colors"
+            className="w-full border-2 border-green-600 text-green-600 font-bold py-4 rounded-xl hover:bg-green-50 transition-colors text-base"
           >
             {t('login.createAccount')}
           </button>
@@ -167,3 +148,5 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
+
