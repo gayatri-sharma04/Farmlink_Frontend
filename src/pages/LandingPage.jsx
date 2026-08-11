@@ -167,7 +167,7 @@ const LandingPage = () => {
 
 
       {/* Quote */}
-      <section className="bg-green-50 py-16 lg:py-20">
+      {/* <section className="bg-green-50 py-16 lg:py-20">
         <FadeIn className="mx-auto max-w-4xl px-6 text-center">
 
           <div className="mb-4 text-5xl leading-none text-green-600">
@@ -183,14 +183,39 @@ const LandingPage = () => {
           </p>
 
         </FadeIn>
-      </section>
+      </section> */}
+
+      <section id="about" className="min-h-[500px] flex items-center bg-white py-20">
+  <div className="w-full max-w-6xl mx-auto px-6">
+
+    <div className="max-w-4xl mx-auto text-center">
+
+      <p className="text-sm font-semibold uppercase tracking-widest text-green-900 mb-3">
+        About FarmLink
+      </p>
+
+      <h2 className="text-3xl sm:text-3xl lg:text-5xl font-bold leading-tight text-gray-800 mb-5">
+        Connecting Nepal's Farmers Directly With Consumers
+      </h2>
+
+      <p className="mx-auto max-w-3xl text-lg sm:text-xl leading-relaxed text-gray-600">
+        FarmLink is a digital marketplace that connects local farmers directly
+        with consumers, making fresh agricultural products easier to discover
+        while helping farmers reach customers and receive fair value for their
+        products.
+      </p>
+
+    </div>
+
+  </div>
+</section>
 
 
       {/* About */}
       <section id="about" className="scroll-mt-24 bg-gray-50 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl px-6 lg:px-8">
 
-          <FadeIn className="mx-auto mb-14 max-w-3xl text-center">
+          {/* <FadeIn className="mx-auto mb-14 max-w-3xl text-center">
             <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-green-600">
               About FarmLink
             </p>
@@ -208,8 +233,7 @@ const LandingPage = () => {
               easier to discover while helping farmers reach customers and
               receive fair value for their products.
             </p>
-          </FadeIn>
-
+          </FadeIn>  */}
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
 
@@ -266,7 +290,7 @@ const LandingPage = () => {
 
           </div>
 
-
+{/* 
           <FadeIn className="mx-auto mt-14 max-w-3xl text-center">
             <p className="text-lg font-medium leading-8 text-gray-700 sm:text-xl">
               From farm to table, FarmLink makes the connection
@@ -274,7 +298,7 @@ const LandingPage = () => {
                 {' '}simpler, fresher, and fairer.
               </span>
             </p>
-          </FadeIn>
+          </FadeIn> */}
 
         </div>
       </section>
@@ -284,16 +308,19 @@ const LandingPage = () => {
       <section className="bg-white py-20 lg:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
 
-          <FadeIn className="mx-auto mb-16 max-w-3xl text-center">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-600">
+          <FadeIn className="mx-auto mb-16 max-w-4xl text-center">
+            {/* <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-700 sm:text-1xl">
               Simple Process
-            </p>
 
-            <h2 className="text-center text-3xl font-bold text-gray-900 sm:text-4xl">
+            </p> */}
+            
+            <h2 className="text-center text-3xl font-bold text-gray-900 sm:text-3xl">
               How FarmLink Works
             </h2>
+            
+            
 
-            <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-gray-600">
+            <p className="mx-auto mt-4 max-w-4xl text-center text-lg text-gray-600">
               From registration to delivery, FarmLink keeps the process simple.
             </p>
           </FadeIn>
@@ -320,23 +347,23 @@ const LandingPage = () => {
 
       {/* CTA */}
       <section className="bg-green-700 py-20 lg:py-24">
-        <FadeIn className="mx-auto max-w-4xl px-6 text-center text-white">
+        <FadeIn className="mx-auto max-w-7xl px-6 text-center text-white">
           <h2 className="text-3xl font-bold sm:text-4xl">
             Ready to Connect with FarmLink?
           </h2>
 
-          <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-green-100 sm:text-xl">
+          <p className="mx-auto mt-5 max-w-7xl text-lg leading-relaxed text-green-100 sm:text-xl">
             Join the digital marketplace connecting Nepal&apos;s farmers
             directly with consumers.
           </p>
 
-          <button
+          {/* <button
             type="button"
             onClick={() => navigate('/register')}
             className="interactive-btn mt-9 rounded-lg bg-white px-8 py-4 font-semibold text-green-700 shadow-lg transition duration-200 hover:bg-gray-100 hover:shadow-xl"
           >
             Create Your Account
-          </button>
+          </button> */}
         </FadeIn>
       </section>
 
